@@ -9,6 +9,9 @@ class AuthManager: NSObject, ObservableObject {
     @Published var currentUser: GitHubUser?
     @Published var accessToken: String?
 
+    // Configuration - set these for your deployment
+    // The backend URL should be your abacus Cloudflare worker
+    private let backendURL = "https://abacus.example.com" // TODO: Replace with your abacus URL
     private let clientId = "YOUR_GITHUB_CLIENT_ID" // TODO: Replace with actual client ID
     private let redirectUri = "abacus://oauth/callback"
     private let keychainService = "com.abacus.mobile"
@@ -63,15 +66,53 @@ class AuthManager: NSObject, ObservableObject {
     }
 
     private func exchangeCodeForToken(code: String) async throws {
-        // Note: In production, this should go through your backend to keep client_secret secure
-        // For now, we'll use a device flow or expect the user to provide a PAT
+        // Call our backend to exchange the OAuth code for an access token
+        // The backend holds the client_secret securely
 
-        // This is a placeholder - actual implementation would either:
-        // 1. Call your backend to exchange the code
-        // 2. Use GitHub's device flow
-        // 3. Accept a PAT directly from the user
+        guard let url = URL(string: "\(backendURL)/api/auth/mobile/token") else {
+            throw AuthError.invalidURL
+        }
 
-        throw AuthError.notImplemented("Token exchange requires backend support or PAT entry")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body = TokenExchangeRequest(
+            code: code,
+            redirectUri: redirectUri
+        )
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AuthError.invalidResponse
+        }
+
+        switch httpResponse.statusCode {
+        case 200:
+            let tokenResponse = try JSONDecoder().decode(TokenExchangeResponse.self, from: data)
+
+            // Validate the token by fetching the user
+            let client = GitHubClient(token: tokenResponse.accessToken)
+            let user = try await client.getCurrentUser()
+
+            self.accessToken = tokenResponse.accessToken
+            self.currentUser = user
+            self.isAuthenticated = true
+
+            saveCredentials(token: tokenResponse.accessToken, user: user)
+
+        case 400:
+            let errorResponse = try? JSONDecoder().decode(TokenExchangeError.self, from: data)
+            throw AuthError.tokenExchangeFailed(errorResponse?.error ?? "Bad request")
+
+        case 401, 403:
+            throw AuthError.unauthorized
+
+        default:
+            throw AuthError.httpError(httpResponse.statusCode)
+        }
     }
 
     func signInWithPAT(_ token: String) async throws {
@@ -131,7 +172,10 @@ enum AuthError: LocalizedError {
     case invalidURL
     case noCallback
     case invalidCallback
-    case notImplemented(String)
+    case invalidResponse
+    case tokenExchangeFailed(String)
+    case unauthorized
+    case httpError(Int)
 
     var errorDescription: String? {
         switch self {
@@ -141,10 +185,40 @@ enum AuthError: LocalizedError {
             return "No callback received from authentication"
         case .invalidCallback:
             return "Invalid callback from authentication"
-        case .notImplemented(let message):
-            return message
+        case .invalidResponse:
+            return "Invalid response from server"
+        case .tokenExchangeFailed(let message):
+            return "Token exchange failed: \(message)"
+        case .unauthorized:
+            return "Unauthorized"
+        case .httpError(let code):
+            return "Server error: \(code)"
         }
     }
+}
+
+// MARK: - Token Exchange Types
+
+struct TokenExchangeRequest: Codable {
+    let code: String
+    let redirectUri: String
+
+    enum CodingKeys: String, CodingKey {
+        case code
+        case redirectUri = "redirect_uri"
+    }
+}
+
+struct TokenExchangeResponse: Codable {
+    let accessToken: String
+
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+    }
+}
+
+struct TokenExchangeError: Codable {
+    let error: String
 }
 
 struct KeychainHelper {

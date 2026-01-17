@@ -3,78 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
-
-/* Begin PBXBuildFile section */
-		/* App */
-		E1000001 /* AbacusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000001; };
-		E1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000002; };
-
-		/* Views */
-		E1000010 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000010; };
-		E1000011 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000011; };
-		E1000012 /* IssueListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000012; };
-		E1000013 /* IssueDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000013; };
-		E1000014 /* RepositoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000014; };
-		E1000015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000015; };
-		E1000016 /* OfflineBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000016; };
-		E1000017 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000017; };
-
-		/* Models */
-		E1000020 /* Issue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000020; };
-
-		/* Services */
-		E1000030 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000030; };
-		E1000031 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000031; };
-		E1000032 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000032; };
-		E1000033 /* GitHubClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000033; };
-
-		/* Core */
-		E1000040 /* BeadsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000040; };
-		E1000041 /* ThreeWayMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000041; };
-		E1000042 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000042; };
-
-		/* Resources */
-		E1000050 /* Abacus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2000050; };
-		E1000051 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2000051; };
-/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E0000001 /* Abacus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abacus.app; sourceTree = BUILT_PRODUCTS_DIR; };
-
-		/* App */
-		E2000001 /* AbacusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbacusApp.swift; sourceTree = "<group>"; };
-		E2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-
-		/* Views */
-		E2000010 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
-		E2000011 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		E2000012 /* IssueListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueListView.swift; sourceTree = "<group>"; };
-		E2000013 /* IssueDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueDetailView.swift; sourceTree = "<group>"; };
-		E2000014 /* RepositoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoriesView.swift; sourceTree = "<group>"; };
-		E2000015 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		E2000016 /* OfflineBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBanner.swift; sourceTree = "<group>"; };
-		E2000017 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
-
-		/* Models */
-		E2000020 /* Issue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issue.swift; sourceTree = "<group>"; };
-
-		/* Services */
-		E2000030 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
-		E2000031 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		E2000032 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		E2000033 /* GitHubClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubClient.swift; sourceTree = "<group>"; };
-
-		/* Core */
-		E2000040 /* BeadsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeadsParser.swift; sourceTree = "<group>"; };
-		E2000041 /* ThreeWayMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeWayMerge.swift; sourceTree = "<group>"; };
-		E2000042 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
-
-		/* Resources */
-		E2000050 /* Abacus.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodeld; path = Abacus.xcdatamodeld; sourceTree = "<group>"; };
-		E2000051 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		F516270A2F1C0AF5008BDF06 /* Abacus */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Abacus; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E3000001 /* Frameworks */ = {
@@ -90,18 +28,9 @@
 		E4000001 = {
 			isa = PBXGroup;
 			children = (
-				E4000002 /* Abacus */,
+				F516270A2F1C0AF5008BDF06 /* Abacus */,
 				E4000003 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		E4000002 /* Abacus */ = {
-			isa = PBXGroup;
-			children = (
-				E4000010 /* Sources */,
-				E4000020 /* Resources */,
-			);
-			path = Abacus;
 			sourceTree = "<group>";
 		};
 		E4000003 /* Products */ = {
@@ -110,80 +39,6 @@
 				E0000001 /* Abacus.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		E4000010 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				E4000011 /* App */,
-				E4000012 /* Views */,
-				E4000013 /* Models */,
-				E4000014 /* Services */,
-				E4000015 /* Core */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		E4000011 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				E2000001 /* AbacusApp.swift */,
-				E2000002 /* ContentView.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		E4000012 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				E2000010 /* MainTabView.swift */,
-				E2000011 /* LoginView.swift */,
-				E2000012 /* IssueListView.swift */,
-				E2000013 /* IssueDetailView.swift */,
-				E2000014 /* RepositoriesView.swift */,
-				E2000015 /* SettingsView.swift */,
-				E2000016 /* OfflineBanner.swift */,
-				E2000017 /* Components.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		E4000013 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				E2000020 /* Issue.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		E4000014 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				E2000030 /* AuthManager.swift */,
-				E2000031 /* NetworkMonitor.swift */,
-				E2000032 /* SyncManager.swift */,
-				E2000033 /* GitHubClient.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		E4000015 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				E2000040 /* BeadsParser.swift */,
-				E2000041 /* ThreeWayMerge.swift */,
-				E2000042 /* PersistenceController.swift */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		E4000020 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				E2000050 /* Abacus.xcdatamodeld */,
-				E2000051 /* Assets.xcassets */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +55,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F516270A2F1C0AF5008BDF06 /* Abacus */,
 			);
 			name = Abacus;
 			productName = Abacus;
@@ -244,7 +102,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1000051 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,25 +112,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1000001 /* AbacusApp.swift in Sources */,
-				E1000002 /* ContentView.swift in Sources */,
-				E1000010 /* MainTabView.swift in Sources */,
-				E1000011 /* LoginView.swift in Sources */,
-				E1000012 /* IssueListView.swift in Sources */,
-				E1000013 /* IssueDetailView.swift in Sources */,
-				E1000014 /* RepositoriesView.swift in Sources */,
-				E1000015 /* SettingsView.swift in Sources */,
-				E1000016 /* OfflineBanner.swift in Sources */,
-				E1000017 /* Components.swift in Sources */,
-				E1000020 /* Issue.swift in Sources */,
-				E1000030 /* AuthManager.swift in Sources */,
-				E1000031 /* NetworkMonitor.swift in Sources */,
-				E1000032 /* SyncManager.swift in Sources */,
-				E1000033 /* GitHubClient.swift in Sources */,
-				E1000040 /* BeadsParser.swift in Sources */,
-				E1000041 /* ThreeWayMerge.swift in Sources */,
-				E1000042 /* PersistenceController.swift in Sources */,
-				E1000050 /* Abacus.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,7 +245,7 @@
 				CODE_SIGN_ENTITLEMENTS = Abacus/Resources/Abacus.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 755FYD4YJY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Abacus/Resources/Info.plist;
@@ -439,7 +277,7 @@
 				CODE_SIGN_ENTITLEMENTS = Abacus/Resources/Abacus.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 755FYD4YJY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Abacus/Resources/Info.plist;
@@ -485,25 +323,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		E2000050 /* Abacus.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				E2000052 /* Abacus.xcdatamodel */,
-			);
-			currentVersion = E2000052 /* Abacus.xcdatamodel */;
-			path = Abacus.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		E2000052 /* Abacus.xcdatamodel */ = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.xcdatamodel;
-			path = Abacus.xcdatamodel;
-			sourceTree = "<group>";
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = E7000001 /* Project object */;
 }
