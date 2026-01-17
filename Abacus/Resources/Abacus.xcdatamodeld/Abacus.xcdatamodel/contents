@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="24A335" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CachedIssue" representedClassName="CachedIssue" syncable="YES" codeGenerationType="class">
+        <attribute name="assignee" optional="YES" attributeType="String"/>
+        <attribute name="beadsId" optional="YES" attributeType="String"/>
+        <attribute name="closedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="commentsData" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="issueDescription" optional="YES" attributeType="String"/>
+        <attribute name="issueType" optional="YES" attributeType="String"/>
+        <attribute name="parent" optional="YES" attributeType="String"/>
+        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="2" usesScalarValueType="YES"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="repository" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CachedRepository" inverseName="issues" inverseEntity="CachedRepository"/>
+    </entity>
+    <entity name="CachedRepository" representedClassName="CachedRepository" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastSynced" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="owner" optional="YES" attributeType="String"/>
+        <relationship name="issues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CachedIssue" inverseName="repository" inverseEntity="CachedIssue"/>
+    </entity>
+    <entity name="PendingChangeEntity" representedClassName="PendingChangeEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="baseStateData" optional="YES" attributeType="Binary"/>
+        <attribute name="changesData" optional="YES" attributeType="Binary"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="issueId" optional="YES" attributeType="String"/>
+        <attribute name="issueTitle" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+</model>
