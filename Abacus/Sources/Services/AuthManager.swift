@@ -151,11 +151,12 @@ class AuthManager: NSObject, ObservableObject {
         if !hasAttestedKey {
             // First time: need to attest the key
             // Get a challenge from the server first
-            let challenge = try await fetchAttestationChallenge()
+            let (challenge, challengeId) = try await fetchAttestationChallenge()
             let attestation = try await appAttest.getAttestation(challenge: challenge)
 
             request.setValue(attestation, forHTTPHeaderField: "X-App-Attest-Attestation")
             request.setValue(challenge.base64EncodedString(), forHTTPHeaderField: "X-App-Attest-Challenge")
+            request.setValue(challengeId, forHTTPHeaderField: "X-App-Attest-Challenge-Id")
         } else {
             // Subsequent requests: send an assertion
             let assertion = try await appAttest.generateAssertion(for: bodyData)
@@ -164,7 +165,8 @@ class AuthManager: NSObject, ObservableObject {
     }
 
     /// Fetch a challenge nonce from the server for attestation
-    private func fetchAttestationChallenge() async throws -> Data {
+    /// Returns (challengeData, challengeId)
+    private func fetchAttestationChallenge() async throws -> (Data, String) {
         guard let url = URL(string: "\(backendURL)/api/auth/mobile/challenge") else {
             throw AuthError.invalidURL
         }
@@ -185,7 +187,7 @@ class AuthManager: NSObject, ObservableObject {
             throw AuthError.invalidResponse
         }
 
-        return challengeData
+        return (challengeData, challengeResponse.challengeId)
     }
 
     func signInWithPAT(_ token: String) async throws {
@@ -296,4 +298,5 @@ struct TokenExchangeError: Codable {
 
 struct ChallengeResponse: Codable {
     let challenge: String
+    let challengeId: String
 }
