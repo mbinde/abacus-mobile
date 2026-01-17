@@ -1,5 +1,6 @@
 import SwiftUI
 import AuthenticationServices
+import CryptoKit
 
 @MainActor
 class AuthManager: NSObject, ObservableObject {
@@ -15,6 +16,8 @@ class AuthManager: NSObject, ObservableObject {
     private let clientId = "YOUR_GITHUB_CLIENT_ID" // TODO: Replace with actual client ID
     private let redirectUri = "abacus://oauth/callback"
     private let keychainService = "com.abacus.mobile"
+
+    private let appAttest = AppAttestService.shared
 
     private override init() {
         super.init()
@@ -68,20 +71,26 @@ class AuthManager: NSObject, ObservableObject {
     private func exchangeCodeForToken(code: String) async throws {
         // Call our backend to exchange the OAuth code for an access token
         // The backend holds the client_secret securely
+        // We use App Attest to prove this request comes from the legitimate iOS app
 
         guard let url = URL(string: "\(backendURL)/api/auth/mobile/token") else {
             throw AuthError.invalidURL
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let body = TokenExchangeRequest(
+        // Build the request body
+        let requestBody = TokenExchangeRequest(
             code: code,
             redirectUri: redirectUri
         )
-        request.httpBody = try JSONEncoder().encode(body)
+        let bodyData = try JSONEncoder().encode(requestBody)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = bodyData
+
+        // Add App Attest headers
+        try await addAppAttestHeaders(to: &request, bodyData: bodyData)
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -108,11 +117,75 @@ class AuthManager: NSObject, ObservableObject {
             throw AuthError.tokenExchangeFailed(errorResponse?.error ?? "Bad request")
 
         case 401, 403:
+            // Could be attestation failure - reset and try again next time
+            let errorResponse = try? JSONDecoder().decode(TokenExchangeError.self, from: data)
+            if errorResponse?.error.contains("attestation") == true {
+                await appAttest.reset()
+            }
             throw AuthError.unauthorized
 
         default:
             throw AuthError.httpError(httpResponse.statusCode)
         }
+    }
+
+    /// Add App Attest headers to a request for server verification
+    private func addAppAttestHeaders(to request: inout URLRequest, bodyData: Data) async throws {
+        // Check if App Attest is supported
+        let isSupported = await appAttest.isSupported
+        guard isSupported else {
+            // Fall back to non-attested request (server may reject)
+            request.setValue("false", forHTTPHeaderField: "X-App-Attest-Supported")
+            return
+        }
+
+        request.setValue("true", forHTTPHeaderField: "X-App-Attest-Supported")
+
+        // Prepare the key if we don't have one
+        let keyId = try await appAttest.prepareKey()
+        request.setValue(keyId, forHTTPHeaderField: "X-App-Attest-Key-Id")
+
+        // Check if we need to send attestation or assertion
+        let hasAttestedKey = await appAttest.hasAttestedKey
+
+        if !hasAttestedKey {
+            // First time: need to attest the key
+            // Get a challenge from the server first
+            let challenge = try await fetchAttestationChallenge()
+            let attestation = try await appAttest.getAttestation(challenge: challenge)
+
+            request.setValue(attestation, forHTTPHeaderField: "X-App-Attest-Attestation")
+            request.setValue(challenge.base64EncodedString(), forHTTPHeaderField: "X-App-Attest-Challenge")
+        } else {
+            // Subsequent requests: send an assertion
+            let assertion = try await appAttest.generateAssertion(for: bodyData)
+            request.setValue(assertion, forHTTPHeaderField: "X-App-Attest-Assertion")
+        }
+    }
+
+    /// Fetch a challenge nonce from the server for attestation
+    private func fetchAttestationChallenge() async throws -> Data {
+        guard let url = URL(string: "\(backendURL)/api/auth/mobile/challenge") else {
+            throw AuthError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw AuthError.invalidResponse
+        }
+
+        let challengeResponse = try JSONDecoder().decode(ChallengeResponse.self, from: data)
+
+        guard let challengeData = Data(base64Encoded: challengeResponse.challenge) else {
+            throw AuthError.invalidResponse
+        }
+
+        return challengeData
     }
 
     func signInWithPAT(_ token: String) async throws {
@@ -221,42 +294,6 @@ struct TokenExchangeError: Codable {
     let error: String
 }
 
-struct KeychainHelper {
-    static func save(_ data: Data, service: String, account: String) {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecValueData as String: data,
-            kSecAttrSynchronizable as String: kCFBooleanTrue as Any
-        ]
-
-        SecItemDelete(query as CFDictionary)
-        SecItemAdd(query as CFDictionary, nil)
-    }
-
-    static func load(service: String, account: String) -> Data? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecReturnData as String: true,
-            kSecAttrSynchronizable as String: kCFBooleanTrue as Any
-        ]
-
-        var result: AnyObject?
-        SecItemCopyMatching(query as CFDictionary, &result)
-        return result as? Data
-    }
-
-    static func delete(service: String, account: String) {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecAttrSynchronizable as String: kCFBooleanTrue as Any
-        ]
-
-        SecItemDelete(query as CFDictionary)
-    }
+struct ChallengeResponse: Codable {
+    let challenge: String
 }
